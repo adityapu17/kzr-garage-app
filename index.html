@@ -6,76 +6,130 @@
   <title>KZR Garage Pro</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Clean scrollbar hiding for horizontal tabs */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen pb-12 antialiased">
 
-  <!-- Minimalist Header -->
+  <!-- Header Minimalis -->
   <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50">
     <div class="max-w-md mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2">
         <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
         <h1 class="text-base font-bold tracking-wide text-slate-100">KZR GARAGE</h1>
       </div>
-      <span class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2.5 py-1 rounded border border-slate-700">Vario 125 Old</span>
+      <span class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2.5 py-1 rounded border border-slate-700">Vario 125 KZR</span>
     </div>
   </header>
 
-  <!-- Clean Navigation Bar -->
+  <!-- Navigation Bar -->
   <nav class="bg-slate-900 border-b border-slate-800 sticky top-[57px] z-40">
     <div class="max-w-md mx-auto flex overflow-x-auto text-xs no-scrollbar">
       <button onclick="switchTab('parts')" id="tab-parts" class="tab-btn flex-none py-3 px-4 font-medium text-orange-500 border-b-2 border-orange-500">Katalog Sparepart</button>
+      <button onclick="switchTab('diagram')" id="tab-diagram" class="tab-btn flex-none py-3 px-4 font-medium text-slate-400">Skematik CVT</button>
       <button onclick="switchTab('torque')" id="tab-torque" class="tab-btn flex-none py-3 px-4 font-medium text-slate-400">Torsi Baut</button>
       <button onclick="switchTab('logbook')" id="tab-logbook" class="tab-btn flex-none py-3 px-4 font-medium text-slate-400">Log Servis</button>
       <button onclick="switchTab('cvt')" id="tab-cvt" class="tab-btn flex-none py-3 px-4 font-medium text-slate-400">CVT Calculator</button>
-      <button onclick="switchTab('engine')" id="tab-engine" class="tab-btn flex-none py-3 px-4 font-medium text-slate-400">Kalkulator CC</button>
       <button onclick="switchTab('mil')" id="tab-mil" class="tab-btn flex-none py-3 px-4 font-medium text-slate-400">Kode MIL</button>
       <button onclick="switchTab('wiring')" id="tab-wiring" class="tab-btn flex-none py-3 px-4 font-medium text-slate-400">Kelistrikan</button>
     </div>
   </nav>
 
-  <!-- Main Content Area -->
   <main class="max-w-md mx-auto p-4 space-y-4">
 
-    <!-- 1. SPAREPART CATALOG (LENGKAP & MODERN) -->
+    <!-- 1. KATALOG SPAREPART LENGKAP -->
     <section id="sec-parts" class="tab-content space-y-3">
       <div class="flex justify-between items-center">
         <span id="partCount" class="text-xs font-mono text-slate-400"></span>
       </div>
 
-      <!-- Search Input -->
       <div class="relative">
-        <input type="text" id="partSearch" onkeyup="searchParts()" placeholder="Cari sparepart, kode, atau substitusi..." class="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-slate-600 transition">
+        <input type="text" id="partSearch" onkeyup="searchParts()" placeholder="Cari sparepart, bearing, boshing, atau kode..." class="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-slate-600 transition">
       </div>
 
-      <!-- Category Filter Pills -->
+      <!-- Filter Kategori -->
       <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1 text-[11px]">
         <button onclick="filterPartCat('ALL')" class="cat-pill bg-slate-800 text-slate-200 px-3 py-1 rounded-lg border border-slate-700 font-medium shrink-0">Semua</button>
         <button onclick="filterPartCat('CVT')" class="cat-pill bg-slate-900 text-slate-400 px-3 py-1 rounded-lg border border-slate-800 shrink-0">CVT</button>
+        <button onclick="filterPartCat('Bearing & Boshing')" class="cat-pill bg-slate-900 text-slate-400 px-3 py-1 rounded-lg border border-slate-800 shrink-0">Bearing & Boshing</button>
+        <button onclick="filterPartCat('Oli & Pelumas')" class="cat-pill bg-slate-900 text-slate-400 px-3 py-1 rounded-lg border border-slate-800 shrink-0">Oli & Pelumas</button>
         <button onclick="filterPartCat('Mesin')" class="cat-pill bg-slate-900 text-slate-400 px-3 py-1 rounded-lg border border-slate-800 shrink-0">Mesin</button>
         <button onclick="filterPartCat('Bodi & Lampu')" class="cat-pill bg-slate-900 text-slate-400 px-3 py-1 rounded-lg border border-slate-800 shrink-0">Bodi & Lampu</button>
-        <button onclick="filterPartCat('Kaki-kaki & Rem')" class="cat-pill bg-slate-900 text-slate-400 px-3 py-1 rounded-lg border border-slate-800 shrink-0">Kaki & Rem</button>
-        <button onclick="filterPartCat('Sensors & FI')" class="cat-pill bg-slate-900 text-slate-400 px-3 py-1 rounded-lg border border-slate-800 shrink-0">Sensors & FI</button>
+        <button onclick="filterPartCat('Kaki & Rem')" class="cat-pill bg-slate-900 text-slate-400 px-3 py-1 rounded-lg border border-slate-800 shrink-0">Kaki & Rem</button>
       </div>
 
       <div id="partsList" class="space-y-2.5"></div>
     </section>
 
-    <!-- 2. TORQUE SPEC FINDER -->
+    <!-- 2. SKEMATIK & DIAGRAM CVT 3D CROSS-SECTION -->
+    <section id="sec-diagram" class="tab-content hidden space-y-4">
+      <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 text-xs space-y-3">
+        <h3 class="font-bold text-slate-100 flex items-center justify-between">
+          <span>Skematik Potongan CVT (Cross-Section)</span>
+          <span class="text-[10px] font-normal text-orange-400">Klik komponen untuk detail</span>
+        </h3>
+        
+        <!-- Interactive Visual SVG Diagram CVT -->
+        <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 overflow-x-auto flex justify-center">
+          <svg viewBox="0 0 500 240" class="w-full max-w-sm h-auto">
+            <!-- Background Outer Box -->
+            <rect x="10" y="10" width="480" height="220" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+            
+            <!-- As Kruk As (Depan/Drive) -->
+            <rect x="50" y="105" width="130" height="30" fill="#475569" rx="2" />
+            <text x="55" y="124" fill="#94a3b8" font-size="9" font-family="sans-serif">As Kruk As</text>
+
+            <!-- Pulley Depan / Rumah Roller -->
+            <polygon points="100,50 130,50 115,190 85,190" fill="#f97316" class="cursor-pointer hover:opacity-80" onclick="showCvtPartDetail('rumah_roller')" />
+            <text x="65" y="42" fill="#f97316" font-size="10" font-weight="bold">1. Rumah Roller (KZR)</text>
+
+            <!-- Kipas Pulley Depan -->
+            <polygon points="140,50 160,50 145,190 125,190" fill="#e2e8f0" class="cursor-pointer hover:opacity-80" onclick="showCvtPartDetail('kipas_pulley')" />
+            <text x="135" y="42" fill="#cbd5e1" font-size="10" font-weight="bold">2. Kipas Pulley</text>
+
+            <!-- Boshing Roller -->
+            <rect x="115" y="110" width="25" height="20" fill="#fbbf24" class="cursor-pointer" onclick="showCvtPartDetail('bos_roller')" />
+
+            <!-- V-Belt -->
+            <polygon points="123,80 345,70 345,170 123,160" fill="none" stroke="#ef4444" stroke-width="6" stroke-dasharray="4" class="cursor-pointer" onclick="showCvtPartDetail('vbelt')" />
+            <text x="210" y="70" fill="#ef4444" font-size="10" font-weight="bold">3. V-Belt (KZR-601)</text>
+
+            <!-- As Shaft Belakang (Driven) -->
+            <rect x="310" y="105" width="140" height="30" fill="#475569" rx="2" />
+
+            <!-- Secondary Sliding Sheave / Pulley Belakang -->
+            <polygon points="320,40 340,40 330,200 310,200" fill="#38bdf8" class="cursor-pointer hover:opacity-80" onclick="showCvtPartDetail('pulley_belakang')" />
+            <text x="285" y="32" fill="#38bdf8" font-size="10" font-weight="bold">4. Pulley Secondary</text>
+
+            <!-- Per CVT -->
+            <rect x="340" y="90" width="40" height="60" fill="none" stroke="#a855f7" stroke-width="3" stroke-dasharray="3" class="cursor-pointer" onclick="showCvtPartDetail('per_cvt')" />
+
+            <!-- Mangkok Kampas Ganda -->
+            <path d="M 390 50 L 430 50 L 430 190 L 390 190 Z" fill="#64748b" class="cursor-pointer hover:opacity-80" onclick="showCvtPartDetail('mangkok_ganda')" />
+            <text x="385" y="42" fill="#94a3b8" font-size="10" font-weight="bold">5. Mangkok Ganda</text>
+          </svg>
+        </div>
+
+        <div id="cvtDiagramInfo" class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-300">
+          <p class="text-orange-400 font-bold mb-1">Panduan Posisi Dalam CVT:</p>
+          <p class="text-[11px] text-slate-400">Sisi Kiri (Drive) terhubung langsung ke putaran Mesin/Kruk As. Sisi Kanan (Driven) terhubung ke Girboks & Roda Belakang via Kopling Sentrifugal.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TORQUE SPEC FINDER -->
     <section id="sec-torque" class="tab-content hidden space-y-3">
       <input type="text" id="torqueSearch" onkeyup="searchTorque()" placeholder="Cari baut: Pulley, Head, Magnet..." class="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-slate-600">
       <div id="torqueList" class="space-y-2"></div>
     </section>
 
-    <!-- 3. LOGBOOK SERVIS -->
+    <!-- 4. LOGBOOK SERVIS -->
     <section id="sec-logbook" class="tab-content hidden space-y-4">
       <form onsubmit="saveLog(event)" class="bg-slate-900 p-4 rounded-xl space-y-3 border border-slate-800 text-xs">
         <div>
           <label class="text-slate-400 block mb-1">Jenis Servis / Penggantian Part</label>
-          <input type="text" id="logTitle" required placeholder="Ganti Oli + Roller 15g" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-100">
+          <input type="text" id="logTitle" required placeholder="Ganti Oli Castrol Power1 + Roller 15g" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-100">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -83,25 +137,25 @@
             <input type="number" id="logKm" required placeholder="35000" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-100">
           </div>
           <div>
-            <label class="text-slate-400 block mb-1">Biaya (Rp)</label>
-            <input type="number" id="logCost" placeholder="75000" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-100">
+            <label class="text-slate-400 block mb-1">Biaya Total (Rp)</label>
+            <input type="number" id="logCost" placeholder="120000" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-100">
           </div>
         </div>
         <div>
           <label class="text-slate-400 block mb-1">Catatan Tambahan</label>
-          <input type="text" id="logNote" placeholder="Pakai oli SPX2, mangkok ganda dikartel" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-100">
+          <input type="text" id="logNote" placeholder="Pakai oli Ipone Katana, vbelt baru" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-slate-100">
         </div>
-        <button type="submit" class="w-full bg-slate-100 text-slate-900 font-semibold py-2.5 rounded-lg text-xs">Simpan Log</button>
+        <button type="submit" class="w-full bg-slate-100 text-slate-900 font-semibold py-2.5 rounded-lg text-xs">Simpan Log Servis</button>
       </form>
 
       <div class="flex justify-between items-center pt-2">
-        <h3 class="text-xs font-semibold text-slate-400">Riwayat Catatan</h3>
+        <h3 class="text-xs font-semibold text-slate-400">Riwayat Servis</h3>
         <button onclick="clearLogs()" class="text-[11px] text-red-400 hover:underline">Hapus Semua</button>
       </div>
       <div id="logList" class="space-y-2"></div>
     </section>
 
-    <!-- 4. CVT CALCULATOR -->
+    <!-- 5. CVT CALCULATOR -->
     <section id="sec-cvt" class="tab-content hidden space-y-4">
       <div class="bg-slate-900 p-4 rounded-xl space-y-3 border border-slate-800 text-xs">
         <label class="text-slate-400 block">Berat Roller (6 Slot):</label>
@@ -129,41 +183,6 @@
           <span id="avgRollerBadge" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono"></span>
         </div>
         <p id="cvtText" class="text-xs text-slate-300 leading-relaxed"></p>
-      </div>
-    </section>
-
-    <!-- 5. ENGINE CALCULATOR -->
-    <section id="sec-engine" class="tab-content hidden space-y-4">
-      <div class="bg-slate-900 p-4 rounded-xl space-y-3 border border-slate-800 text-xs">
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-slate-400 block mb-1">Diameter Piston (mm)</label>
-            <input type="number" step="0.1" id="engBore" value="52.4" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded text-slate-100">
-          </div>
-          <div>
-            <label class="text-slate-400 block mb-1">Langkah / Stroke (mm)</label>
-            <input type="number" step="0.1" id="engStroke" value="57.9" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded text-slate-100">
-          </div>
-        </div>
-        <div>
-          <label class="text-slate-400 block mb-1">Volume Head / Dome (cc)</label>
-          <input type="number" step="0.1" id="engDome" value="11.5" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded text-slate-100">
-        </div>
-        <button onclick="calculateEngine()" class="w-full bg-slate-100 text-slate-900 font-semibold py-2.5 rounded-lg text-xs">Hitung Kapasitas & Kompresi</button>
-      </div>
-
-      <div id="engineResult" class="hidden bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
-        <div class="grid grid-cols-2 gap-2 text-center">
-          <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-            <span class="text-slate-400 text-[10px]">Volume Mesin</span>
-            <p id="resCc" class="text-base font-bold text-orange-400">124.8 cc</p>
-          </div>
-          <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-            <span class="text-slate-400 text-[10px]">Rasio Kompresi Statis</span>
-            <p id="resComp" class="text-base font-bold text-orange-400">11.0 : 1</p>
-          </div>
-        </div>
-        <p id="resFuelRec" class="text-[11px] text-slate-300 pt-1 border-t border-slate-800"></p>
       </div>
     </section>
 
