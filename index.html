@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KZR Garage Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen pb-12">
+
+  <!-- Header -->
+  <header class="bg-gray-800 border-b border-gray-700 p-4 sticky top-0 z-50">
+    <div class="max-w-md mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold text-orange-500">🔧 KZR Garage Assistant</h1>
+      <span class="text-xs bg-orange-900 text-orange-200 px-2 py-1 rounded">Vario 125 Old</span>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="bg-gray-800 max-w-md mx-auto flex overflow-x-auto text-xs border-b border-gray-700 sticky top-14 z-40">
+    <button onclick="switchTab('torque')" id="tab-torque" class="tab-btn flex-1 py-3 px-2 text-center font-semibold text-orange-400 border-b-2 border-orange-500">Torsi Baut</button>
+    <button onclick="switchTab('cvt')" id="tab-cvt" class="tab-btn flex-1 py-3 px-2 text-center font-semibold text-gray-400">Kalkulator CVT</button>
+    <button onclick="switchTab('mil')" id="tab-mil" class="tab-btn flex-1 py-3 px-2 text-center font-semibold text-gray-400">Cek Kedip MIL</button>
+    <button onclick="switchTab('parts')" id="tab-parts" class="tab-btn flex-1 py-3 px-2 text-center font-semibold text-gray-400">Part No.</button>
+    <button onclick="switchTab('wiring')" id="tab-wiring" class="tab-btn flex-1 py-3 px-2 text-center font-semibold text-gray-400">Wiring</button>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="max-w-md mx-auto p-4 space-y-4">
+
+    <!-- 1. TORQUE SPEC FINDER -->
+    <section id="sec-torque" class="tab-content space-y-3">
+      <h2 class="text-lg font-bold text-gray-200">🔍 Momen Pengencangan Baut</h2>
+      <input type="text" id="torqueSearch" onkeyup="searchTorque()" placeholder="Cari misal: Pulley, Oli, Head..." class="w-full p-2.5 bg-gray-800 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:border-orange-500">
+      <div id="torqueList" class="space-y-2"></div>
+    </section>
+
+    <!-- 2. CVT CALCULATOR -->
+    <section id="sec-cvt" class="tab-content hidden space-y-4">
+      <h2 class="text-lg font-bold text-gray-200">⚙️ Simulasi Racikan CVT</h2>
+      <div class="bg-gray-800 p-4 rounded-lg space-y-3 border border-gray-700">
+        <div>
+          <label class="text-xs text-gray-400">Berat Roller Total / Rata-rata (gram):</label>
+          <input type="number" id="rollerWeight" value="18" class="w-full mt-1 p-2 bg-gray-900 border border-gray-700 rounded text-sm text-white">
+          <p class="text-[10px] text-gray-500 mt-1">*Standar KZR: 18g (Total 108g)</p>
+        </div>
+        <div>
+          <label class="text-xs text-gray-400">Per CVT:</label>
+          <select id="perCvt" class="w-full mt-1 p-2 bg-gray-900 border border-gray-700 rounded text-sm text-white">
+            <option value="1000">Standar / 1000 RPM</option>
+            <option value="1200">1200 RPM</option>
+            <option value="1500">1500 RPM</option>
+          </select>
+        </div>
+        <button onclick="calculateCVT()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 rounded text-sm">Hitung Karakter</button>
+      </div>
+      <div id="cvtResult" class="hidden bg-gray-800 p-4 rounded-lg border border-orange-500/50">
+        <h3 class="font-bold text-orange-400 text-sm mb-1">Estimasi Karakter Performa:</h3>
+        <p id="cvtText" class="text-xs text-gray-300 leading-relaxed"></p>
+      </div>
+    </section>
+
+    <!-- 3. MIL DECODER -->
+    <section id="sec-mil" class="tab-content hidden space-y-3">
+      <h2 class="text-lg font-bold text-gray-200">💡 Decoder Kedipan MIL (PGM-FI)</h2>
+      <div class="bg-gray-800 p-4 rounded-lg space-y-3 border border-gray-700">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-xs text-gray-400">Kedip Panjang (10):</label>
+            <input type="number" id="longBlink" value="0" min="0" class="w-full mt-1 p-2 bg-gray-900 border border-gray-700 rounded text-sm text-white">
+          </div>
+          <div>
+            <label class="text-xs text-gray-400">Kedip Pendek (1):</label>
+            <input type="number" id="shortBlink" value="0" min="0" class="w-full mt-1 p-2 bg-gray-900 border border-gray-700 rounded text-sm text-white">
+          </div>
+        </div>
+        <button onclick="decodeMIL()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 rounded text-sm">Cek Kode Eror</button>
+      </div>
+      <div id="milResult" class="hidden bg-gray-800 p-4 rounded-lg border border-gray-700"></div>
+    </section>
+
+    <!-- 4. PART NUMBER DATABASE -->
+    <section id="sec-parts" class="tab-content hidden space-y-3">
+      <h2 class="text-lg font-bold text-gray-200">📦 Catalog Part Number KZR</h2>
+      <input type="text" id="partSearch" onkeyup="searchParts()" placeholder="Cari nama part..." class="w-full p-2.5 bg-gray-800 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:border-orange-500">
+      <div id="partsList" class="space-y-2"></div>
+    </section>
+
+    <!-- 5. WIRING QUICK REF -->
+    <section id="sec-wiring" class="tab-content hidden space-y-3">
+      <h2 class="text-lg font-bold text-gray-200">⚡ Kode Warna Kabel KZR</h2>
+      <div id="wiringList" class="space-y-2"></div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
